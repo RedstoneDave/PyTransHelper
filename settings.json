@@ -1,0 +1,32 @@
+{
+  "buttonAndKey" : 
+  {
+    "l" :"",
+    "i" :"<Control-i>",
+    "p-":"<Alt-Left>",
+    "p" :"<Control-Left>",
+    "a" :"",
+    "c" :"",
+    "n" :"<Control-Right>",
+    "n-":"<Alt-Right>",
+    "s" :"<Control-s>",
+    "e" :""
+  },
+  "buttonfont" : "Courier 18",
+  "i":
+  {
+    "lan" : "zh",
+    "font" : "Simsun 15",
+    "txtcol" : "#000000",
+    "bgcol" : "#ffa500",
+    "file" : "./text.in"
+  },
+  "o":
+  {
+    "lan" : "en",
+    "font" : "Simsun 15",
+    "txtcol" : "#000000",
+    "bgcol" : "#ffe211",
+    "file" : "./text.out"
+  }
+}
