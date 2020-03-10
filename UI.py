@@ -147,6 +147,8 @@ class App:
 
     def save(self, name = None):
         if name is None: name = self.setting['o']['file']
+        if self.it and self.it < self.end:
+            self.lto[self.it - 1] = self.to.get('1.0', END).rstrip('\n ')
         with open(name, mode = 'w', encoding = "utf-8") as f:
             f.write('\n'.join(self.lto))
         f.close()
