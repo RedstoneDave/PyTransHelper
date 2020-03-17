@@ -1,32 +1,65 @@
 {
-  "buttonAndKey" : 
-  {
-    "l" :"",
-    "i" :"<Control-i>",
-    "p-":"<Alt-Left>",
-    "p" :"<Control-Left>",
-    "a" :"",
-    "c" :"",
-    "n" :"<Control-Right>",
-    "n-":"<Alt-Right>",
-    "s" :"<Control-s>",
-    "e" :""
+  "buttons": [
+    {
+      "id": "l",
+      "key": ""
+    },
+    {
+      "id": "i",
+      "key": "<Control-i>"
+    },
+    {
+      "id": "p-",
+      "key": "<Alt-Left>"
+    },
+    {
+      "id": "p",
+      "key": "<Control-Left>"
+    },
+    {
+      "id": "a",
+      "key": ""
+    },
+    {
+      "id": "c",
+      "key": "<Alt-c>"
+    },
+    {
+      "id": "n",
+      "key": "<Control-Right>"
+    },
+    {
+      "id": "n-",
+      "key": "<Alt-Right>"
+    },
+    {
+      "id": "s",
+      "key": "<Control-s>"
+    },
+    {
+      "id": "e",
+      "key": ""
+    }
+  ],
+  "buttonfont": "Courier 18",
+  "i": {
+    "lan": "zh",
+    "font": "Simsun 15",
+    "txtcol": "#000000",
+    "bgcol": "#66ccff",
+    "file": "./text.in"
   },
-  "buttonfont" : "Courier 18",
-  "i":
-  {
-    "lan" : "zh",
-    "font" : "Simsun 15",
-    "txtcol" : "#000000",
-    "bgcol" : "#ffa500",
-    "file" : "./text.in"
+  "o": {
+    "lan": "en",
+    "font": "Simsun 15",
+    "txtcol": "#000000",
+    "bgcol": "#66ccff",
+    "file": "./text.out"
   },
-  "o":
-  {
-    "lan" : "en",
-    "font" : "Simsun 15",
-    "txtcol" : "#000000",
-    "bgcol" : "#ffe211",
-    "file" : "./text.out"
+  "screen": {
+    "w": 1220,
+    "h": 700,
+    "bside": 20,
+    "bup": 70
   }
 }
