@@ -17,7 +17,10 @@ def translateGoogle(s, fr, to):
     })
     URL = 'https://translate.googleapis.com/translate_a/single?' + data
     res = request.urlopen(URL)
-    return json.load(res)['sentences'][0]['trans']
+    js = json.load(res)
+    sentences = js['sentences']
+    ret = ''.join(i['trans'] for i in sentences)
+    return ret
 
 translate = translateGoogle
 class App:
@@ -34,12 +37,12 @@ class App:
     def _initUI(self):
         self.ui = tk.Tk()
         self.ui.title("PyTransHelper")
-        self.ui.geometry("1220x700")
+        self.ui.geometry(f"{self.scrset['w']}x{self.scrset['h']}")
         self.ui.resizable(False,False)
 
     def _initLt(self):
         self.lable1 = tk.Label(self.ui, text = "Input")
-        self.lable1.place(x = 20, y = 20, height = 40, width = 580)
+        self.lable1.place(x = 0, y = 0, height = self.scrset['ptop'], width = self.scrset['w']/2)
         self._frbar = tk.Scrollbar(self.ui)
         self._frbar.pack(side = LEFT, fill = Y)
         self.fr = tk.Text(self.ui, bg = self.setting['i']['bgcol'], bd = 5,
@@ -47,11 +50,16 @@ class App:
                           fg = self.setting['i']['txtcol'],
                           yscrollcommand = self._frbar.set)
         self._frbar.config(command = self.fr.yview)
-        self.fr.place(x = 20, y = 70, height = 500,width = 580)
+        self.fr.place(
+            x = self.scrset['pside'],
+            y = self.scrset['ptop'],
+            height = self.scrset['txth'],
+            width = self.txtwid
+        )
 
     def _initRt(self):
         self.lable2 = tk.Label(self.ui, text = "Output")
-        self.lable2.place(x = 620, y = 20, height = 40, width = 580)
+        self.lable2.place(x = self.scrset['w']/2, y = 0, height = self.scrset['ptop'], width = self.scrset['w']/2)
         self._tobar = tk.Scrollbar(self.ui)
         self._tobar.pack(side = RIGHT, fill = Y)
         self.to = tk.Text(self.ui, bg = self.setting['o']['bgcol'], bd = 5,
@@ -59,7 +67,11 @@ class App:
                           fg = self.setting['o']['txtcol'],
                           yscrollcommand = self._tobar.set)
         self._tobar.config(command = self.to.yview)
-        self.to.place(x = 620, y = 70, height = 500, width = 580)
+        self.to.place(
+            x = self.scrset['pside'] + self.scrset['pmid'] + self.txtwid,
+            y = self.scrset['ptop'],
+            height = self.scrset['txth'],
+            width = self.txtwid)
 
     def _ButtonDictInit(self):
         self.buttons = {
@@ -71,7 +83,7 @@ class App:
             'p-': self.crBt("SkipBd", lambda: self.prev(False)),
             's' : self.crBt("Save", self.save),
             'e' : self.crBt("Exec", lambda: exec(self.to.get('1.0', END))),
-            'a' : self.crBt("Auto\nTrans", self.trans),
+            'a' : self.crBt("AutoTrans", self.trans),
             'c' : self.crBt("Copy", self.copy)
         }
 
@@ -81,15 +93,26 @@ class App:
                          command = command)
 
     def _ButtonPlace(self):
-        j = 20
+        j = self.scrset['pside']
+        h = self.scrset['buttonY']
         for i in self.setting['buttons']:
             try:
-                (b:=self.buttons[i["id"]]).place(x = j, y = 600, height = 70,width = 100)
-                j += 120
+                (b:=self.buttons[i["id"]]).place(
+                    x = j,
+                    y = h,
+                    height = self.scrset['buttonH'],
+                    width = self.btnwid
+                )
+                j += self.btnwid + self.scrset['pmid']
+                if j >= self.scrset['w'] - self.scrset['pside']:
+                    if h + self.scrset['buttonH'] > self.scrset['h']:
+                        msgbox.showwarning(self.__name, "The button may be out of the UI")
+                    j = self.scrset['pside']
+                    h += self.scrset['pbtn'] + self.scrset['buttonH']
                 if i["key"] != "":
                     self.ui.bind(i["key"], b['command'])
-            except KeyError:
-                pass
+            except KeyError as e:
+                msgbox.showerror(self.__name, f"KeyError raised: {e}, maybe you wrote an invalid button id in settings.json")
 
     def initFromInput(self):
         self.text = self.fr.get('1.0', END)
@@ -120,7 +143,7 @@ class App:
             msgbox.showerror(self.__name, "Input and/or output file missing!")
             return -1
         except Exception as e:
-            msgbox.showerror(self.__name, f"unknown error raised {repr(e)}")
+            msgbox.showerror(self.__name, f"unknown error raised: {repr(e)}")
             return -1
         self.fr.delete('1.0', END)
         f.close()
@@ -134,6 +157,10 @@ class App:
             with open(file) as f:
                 self.setting = json.load(f)
                 f.close()
+            self.scrset = self.setting['screen']
+            rawwid = self.scrset['w'] - 2*self.scrset['pside']
+            self.txtwid = (rawwid - self.scrset['pmid'])/2
+            self.btnwid = (rawwid + self.scrset['pmid'])/self.scrset['buttonpline'] - self.scrset['pmid']
         except Exception as e:
             raise e
 
@@ -188,7 +215,7 @@ class App:
                                           self.setting['i']['lan'],
                                           self.setting['o']['lan']))
         except Exception as e:
-            msgbox.showerror(self.__name, f'Invalid Translation {e}')
+            msgbox.showerror(self.__name, f'Invalid Translation: {e}')
         
 if __name__ == '__main__':
     app = App('./settings.json')    

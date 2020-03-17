@@ -17,20 +17,20 @@
       "key": "<Control-Left>"
     },
     {
-      "id": "a",
-      "key": ""
-    },
-    {
-      "id": "c",
-      "key": "<Alt-c>"
-    },
-    {
       "id": "n",
       "key": "<Control-Right>"
     },
     {
       "id": "n-",
       "key": "<Alt-Right>"
+    },
+    {
+      "id": "a",
+      "key": ""
+    },
+    {
+      "id": "c",
+      "key": "<Alt-c>"
     },
     {
       "id": "s",
@@ -41,7 +41,7 @@
       "key": ""
     }
   ],
-  "buttonfont": "Courier 18",
+  "buttonfont": "Courier 16",
   "i": {
     "lan": "zh",
     "font": "Simsun 15",
@@ -58,8 +58,14 @@
   },
   "screen": {
     "w": 1220,
-    "h": 700,
-    "bside": 20,
-    "bup": 70
+    "h": 670,
+    "pside": 20,
+    "ptop": 70,
+    "pmid": 20,
+    "pbtn": 10,
+    "txth": 450,
+    "buttonY": 540,
+    "buttonH": 50,
+    "buttonpline": 8 
   }
 }
