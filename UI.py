@@ -89,7 +89,8 @@ class App:
             's' : self.crBt("Save", self.save),
             'e' : self.crBt("Exec", lambda: exec(self.to.get('1.0', END))),
             'a' : self.crBt("AutoTrans", self.trans),
-            'c' : self.crBt("Copy", self.copy)
+            'c' : self.crBt("Copy", self.copy),
+            'j' : self.crBt("Jump", self.jump)
         }
 
     def crBt(self, text, command):
@@ -139,6 +140,31 @@ class App:
         f.close()
         self.end = len(self.lfr)
         self.it = -1
+
+    def require4str(self, title, prompt):
+        tmp = tk.Tk()
+        tmp.geometry("300x300")
+        tmp.resizable(False,False)
+        tlable = tk.Label(tmp, text = prompt)
+        tlable.pack()
+        retvar = tk.StringVar(tmp)
+        tentry = tk.Entry(tmp, textvariable = retvar)
+        tentry.pack()
+        def f4btn():
+            tmp.quit()
+            tmp.destroy()
+        tmpbtn = tk.Button(tmp, text = "Confirm", command = f4btn)
+        tmpbtn.pack()
+        tmp.mainloop()
+        return retvar.get()
+
+    def require4int(self, title, prompt):
+        s = self.require4str(title, prompt)
+        try:
+            return int(s)
+        except ValueError:
+            msgbox.showerror("You are not inputing an integer!")
+            return -1
 
     def loadFromFile(self, file = None, filetr = None):
         if file   is None:file   = self.setting['i']['file']
@@ -198,6 +224,13 @@ class App:
         self.to.insert(END, self.lto[index])
         self.it = index
         return 0
+
+    def jump(self, save = True):
+        i = self.require4int(self.__name, "Input the line that\nyou want to jump to")
+        if i < 0 or i >= self.end:
+            msgbox.showerror(self.__name, "Index out of range!")
+            return -1
+        self.moveto(i)
 
     def next(self, save = True):
         self.moveto(self.it + 1, save)

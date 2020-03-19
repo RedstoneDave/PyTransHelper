@@ -37,6 +37,10 @@
       "key": "<Control-s>"
     },
     {
+      "id": "j",
+      "key": "<Control-j>"
+    },
+    {
       "id": "e",
       "key": ""
     }
@@ -66,6 +70,6 @@
     "txth": 450,
     "buttonY": 540,
     "buttonH": 50,
-    "buttonpline": 8 
+    "buttonpline": 8
   }
 }
