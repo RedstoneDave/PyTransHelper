@@ -19,9 +19,9 @@
 #### Init
  This button is used for initialize the source from the *Source* box, and generate the translation files, where **text.out** has only line breaks(a.k.a. '\n'). and also initalize important variables.
 #### SkipFd
- When you press this button, you are skipping to the last line of the translation **without saving the present translation**, not available when translating the first line. 
+ When you press this button, you are skipping to the previous line of the translation **without saving the present translation**, not available when translating the first line. 
 #### Prev
- When you press this button, you are **saving the present translation result** and going to the last line of the translation, not available when translating the first line.
+ When you press this button, you are **saving the present translation result** and going to the previous line of the translation, not available when translating the first line.
 #### Next
  When you press this button, you are **saving the translation result** and going to the next line of the translation.
 #### SkipBd

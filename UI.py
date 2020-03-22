@@ -1,8 +1,9 @@
 import json
 import tkinter as tk
 import tkinter.messagebox as msgbox
-from tkinter.constants import END, LEFT, RIGHT, Y
+from tkinter.constants import END, LEFT, RIGHT, X, Y, TOP, W
 from urllib import parse, request
+import indexsys as index
 
 def translateGoogle(s, fr, to):
     query = s.strip('\n')
@@ -31,6 +32,7 @@ class App:
         self._initUI()
         self._initLt()
         self._initRt()
+        self._initBar()
         self._ButtonDictInit()
         self._ButtonPlace()
 
@@ -39,6 +41,14 @@ class App:
         self.ui.title("PyTransHelper")
         self.ui.geometry(f"{self.scrset['w']}x{self.scrset['h']}")
         self.ui.resizable(False,False)
+
+    def _initBar(self):
+        self.bar = tk.Label(
+            self.ui, justify = LEFT,
+            anchor = W,
+            font = self.setting["barfont"]
+        )
+        self.bar.pack(side = TOP, fill = X)
 
     def _initLt(self):
         self.lable1 = tk.Label(self.ui, text = "Source")
@@ -140,6 +150,8 @@ class App:
         f.close()
         self.end = len(self.lfr)
         self.it = -1
+        self.index = index.IndexList(self.lfr)
+        self.index.save(self.setting["indexfile"])
 
     def require4str(self, title, prompt):
         tmp = tk.Tk()
@@ -186,6 +198,10 @@ class App:
         self.lto = tr.split('\n')
         self.end = len(self.lfr)
         self.it = -1
+        try:
+            self.index = index.IndexList.load(self.setting["indexfile"])
+        except FileNotFoundError:
+            msgbox.showerror(self.__name, "Index file missing!")
 
     def loadset(self, file):
         try:
@@ -223,7 +239,7 @@ class App:
         self.to.delete('1.0', END)
         self.to.insert(END, self.lto[index])
         self.it = index
-        return 0
+        self.bar["text"] = f"{self.it} | {self.index.generate(self.it)}"
 
     def jump(self, save = True):
         i = self.require4int(self.__name, "Input the line that\nyou want to jump to")

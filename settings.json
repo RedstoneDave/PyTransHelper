@@ -46,6 +46,8 @@
     }
   ],
   "buttonfont": "Courier 16",
+  "barfont": "Courier 12",
+  "indexfile": "./text.idx", 
   "i": {
     "lan": "zh",
     "font": "Simsun 15",
