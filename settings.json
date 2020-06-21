@@ -47,20 +47,20 @@
   ],
   "buttonfont": "Courier 16",
   "barfont": "Courier 12",
-  "indexfile": "./text.idx", 
+  "indexfile": "./BitArray.idx", 
   "i": {
     "lan": "zh",
     "font": "Simsun 15",
     "txtcol": "#000000",
     "bgcol": "#66ccff",
-    "file": "./text.in"
+    "file": "./bitarray.in"
   },
   "o": {
     "lan": "en",
     "font": "Simsun 15",
     "txtcol": "#000000",
     "bgcol": "#66ccff",
-    "file": "./text.out"
+    "file": "./bitarray.out"
   },
   "screen": {
     "w": 1220,

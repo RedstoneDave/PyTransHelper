@@ -246,7 +246,7 @@ class App:
         if i < 0 or i >= self.end:
             msgbox.showerror(self.__name, "Index out of range!")
             return -1
-        self.moveto(i)
+        self.moveto(i, save)
 
     def next(self, save = True):
         self.moveto(self.it + 1, save)
@@ -257,7 +257,7 @@ class App:
     def save(self, name = None):
         if name is None: name = self.setting['o']['file']
         if self.it and self.it < self.end:
-            self.lto[self.it - 1] = self.to.get('1.0', END).rstrip('\n ')
+            self.lto[self.it] = self.to.get('1.0', END).rstrip('\n ')
         with open(name, mode = 'w', encoding = "utf-8") as f:
             f.write('\n'.join(self.lto))
         f.close()
