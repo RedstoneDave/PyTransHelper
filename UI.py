@@ -25,9 +25,10 @@ def translateGoogle(s, fr, to):
 
 translate = translateGoogle
 class App:
-    '''The application'''
+    '''The application, most things are implemented here'''
     __name = "PyTransHelper"
     def __init__(self, file):
+        #functions called here shouldn't be called anywhere else
         self.loadset(file)
         self._initUI()
         self._initLt()
@@ -37,12 +38,14 @@ class App:
         self._ButtonPlace()
 
     def _initUI(self):
+        '''Initialize the Tk object'''
         self.ui = tk.Tk()
         self.ui.title("PyTransHelper")
         self.ui.geometry(f"{self.scrset['w']}x{self.scrset['h']}")
         self.ui.resizable(False,False)
 
     def _initBar(self):
+        '''Initialize the top bar'''
         self.bar = tk.Label(
             self.ui, justify = LEFT,
             anchor = W,
@@ -51,6 +54,7 @@ class App:
         self.bar.pack(side = TOP, fill = X)
 
     def _initLt(self):
+        '''Initialize the left box (a.k.a. source box)'''
         self.lable1 = tk.Label(self.ui, text = "Source")
         self.lable1.place(x = 0, y = 0, height = self.scrset['ptop'], width = self.scrset['w']/2)
         self._frbar = tk.Scrollbar(self.ui)
@@ -70,6 +74,7 @@ class App:
         )
 
     def _initRt(self):
+        '''Initialize the right box (a.k.a. result box)'''
         self.lable2 = tk.Label(self.ui, text = "Result")
         self.lable2.place(x = self.scrset['w']/2, y = 0, height = self.scrset['ptop'], width = self.scrset['w']/2)
         self._tobar = tk.Scrollbar(self.ui)
@@ -89,6 +94,7 @@ class App:
         )
 
     def _ButtonDictInit(self):
+        '''Initialize the dictionary of the buttons'''
         self.buttons = {
             'l' : self.crBt("Load", self.loadFromFile),
             'i' : self.crBt("Init", self.initFromInput),
@@ -104,6 +110,7 @@ class App:
         }
 
     def crBt(self, text, command):
+        '''Create a single button'''
         return tk.Button(
             self.ui, bd = 8, text = text,
             font = self.setting['buttonfont'],
@@ -111,6 +118,7 @@ class App:
         )
 
     def _ButtonPlace(self):
+        '''Place all the buttons'''
         j = self.scrset['pside']
         h = self.scrset['buttonY']
         for i in self.setting['buttons']:
@@ -135,11 +143,14 @@ class App:
                 msgbox.showerror(self.__name, f"Unknown Exception raised when placing the buttons: {e}")
 
     def initFromInput(self):
+        '''Get the source file fron the source box'''
         self.text = self.fr.get('1.0', END)
         self.init_text()
         self.fr.delete('1.0', END)
 
     def init_text(self):
+        '''Initialize some basic variables and create the files
+        after getting the source text'''
         with open(self.setting['i']['file'], mode = 'w', encoding = "utf-8") as f:
             f.write(self.text)
         f.close()
@@ -154,6 +165,7 @@ class App:
         self.index.save(self.setting["indexfile"])
 
     def require4str(self, title, prompt):
+        '''Read a string from a Tk box and return it'''
         tmp = tk.Tk()
         tmp.geometry("300x300")
         tmp.resizable(False,False)
@@ -171,6 +183,8 @@ class App:
         return retvar.get()
 
     def require4int(self, title, prompt):
+        '''Read a int from a Tk box and return it
+        or return -1 if the user is not inputing an integer'''
         s = self.require4str(title, prompt)
         try:
             return int(s)
@@ -179,6 +193,7 @@ class App:
             return -1
 
     def loadFromFile(self, file = None, filetr = None):
+        '''load from source files that the user last worked on'''
         if file   is None:file   = self.setting['i']['file']
         if filetr is None:filetr = self.setting['o']['file']
         try:
@@ -204,6 +219,7 @@ class App:
             msgbox.showerror(self.__name, "Index file missing!")
 
     def loadset(self, file):
+        '''Load the settings, MUST BE CALLED FIRST IN self.__init__'''
         try:
             with open(file) as f:
                 self.setting = json.load(f)
@@ -218,10 +234,12 @@ class App:
             msgbox.showerror(self.__name, f"Unknown Exception raised when loading the settings: {e}")
 
     def copy(self):
+        
         self.to.delete('1.0',END)
         self.to.insert(END, self.fr.get('1.0',END))
 
     def moveto(self, index, save = True):
+        '''move to a certain place'''
         try:
             if index >= self.end:
                 msgbox.showerror(self.__name, "That's the end of your passage!")
@@ -242,6 +260,7 @@ class App:
         self.bar["text"] = f"{self.it} | {self.index.generate(self.it)}"
 
     def jump(self, save = True):
+        '''Function for button Jump'''
         i = self.require4int(self.__name, "Input the line that\nyou want to jump to")
         if i < 0 or i >= self.end:
             msgbox.showerror(self.__name, "Index out of range!")
@@ -249,12 +268,15 @@ class App:
         self.moveto(i, save)
 
     def next(self, save = True):
+        '''move to the next line'''
         self.moveto(self.it + 1, save)
 
     def prev(self, save = True):
+        '''move to the last line'''
         self.moveto(self.it - 1, save)
 
     def save(self, name = None):
+        '''save the translation'''
         if name is None: name = self.setting['o']['file']
         if self.it and self.it < self.end:
             self.lto[self.it] = self.to.get('1.0', END).rstrip('\n ')
@@ -264,6 +286,7 @@ class App:
         msgbox.showinfo(self.__name, "File Saved")
 
     def trans(self):
+        '''Function for button AutoTrans'''
         try:
             self.to.insert(END, translate(
                 self.fr.get('1.0', END),
@@ -274,5 +297,5 @@ class App:
             msgbox.showerror(self.__name, f'Invalid Translation: {e}')
 
 if __name__ == '__main__':
-    app = App('./settings.json')    
+    app = App('./settings.json')
     tk.mainloop()

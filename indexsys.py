@@ -22,7 +22,7 @@ class IndexItem:
         return s
 
     def __repr__(self):
-        return f"{self.title} {self.lv} {self.line}\n{self.children}\n"
+        return f"IndexItem({self.lv}, \"{self.title}\", {self.par}, {self.line})"
 
 class IndexList:
     def __init__(self, passage, name = "Root"):
@@ -52,7 +52,7 @@ class IndexList:
         assert isinstance(i, int), "Invalid argument"
         lt = 0
         rt = self.len
-        mid = (lt + rt) >> 1
+        mid = (lt + rt + 1) >> 1
         while lt < mid:
             if self.list[mid].line > i:
                 rt = mid - 1
@@ -60,8 +60,8 @@ class IndexList:
                 return self.list[mid]
             else:
                 lt = mid
-            mid = (lt + rt) >> 1
-        return self.list[lt]
+            mid = (lt + rt + 1) >> 1
+        return self.list[mid]
 
     def generate(self, i):
         return self[i].generate()
@@ -99,4 +99,4 @@ class IndexList:
         return inst
 
     def __repr__(self):
-        return repr(self.root)
+        return repr(self.list)
