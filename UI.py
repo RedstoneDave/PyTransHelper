@@ -1,9 +1,12 @@
 import json
 import tkinter as tk
 import tkinter.messagebox as msgbox
-from tkinter.constants import END, LEFT, RIGHT, X, Y, TOP, W
+from tkinter.constants import END, LEFT, RIGHT, TOP, W, X, Y
 from urllib import parse, request
-import indexsys as index
+
+import index
+import project
+
 
 def translateGoogle(s, fr, to):
     query = s.strip('\n')
@@ -30,21 +33,21 @@ class App:
     def __init__(self, file):
         #functions called here shouldn't be called anywhere else
         self.loadset(file)
-        self._initUI()
-        self._initLt()
-        self._initRt()
-        self._initBar()
-        self._ButtonDictInit()
-        self._ButtonPlace()
+        self.__initUI()
+        self.__initLt()
+        self.__initRt()
+        self.__initBar()
+        self.__ButtonDictInit()
+        self.__ButtonPlace()
 
-    def _initUI(self):
+    def __initUI(self):
         '''Initialize the Tk object'''
         self.ui = tk.Tk()
         self.ui.title("PyTransHelper")
         self.ui.geometry(f"{self.scrset['w']}x{self.scrset['h']}")
         self.ui.resizable(False,False)
 
-    def _initBar(self):
+    def __initBar(self):
         '''Initialize the top bar'''
         self.bar = tk.Label(
             self.ui, justify = LEFT,
@@ -53,7 +56,7 @@ class App:
         )
         self.bar.pack(side = TOP, fill = X)
 
-    def _initLt(self):
+    def __initLt(self):
         '''Initialize the left box (a.k.a. source box)'''
         self.lable1 = tk.Label(self.ui, text = "Source")
         self.lable1.place(x = 0, y = 0, height = self.scrset['ptop'], width = self.scrset['w']/2)
@@ -73,7 +76,7 @@ class App:
             width = self.txtwid
         )
 
-    def _initRt(self):
+    def __initRt(self):
         '''Initialize the right box (a.k.a. result box)'''
         self.lable2 = tk.Label(self.ui, text = "Result")
         self.lable2.place(x = self.scrset['w']/2, y = 0, height = self.scrset['ptop'], width = self.scrset['w']/2)
@@ -93,7 +96,7 @@ class App:
             width = self.txtwid
         )
 
-    def _ButtonDictInit(self):
+    def __ButtonDictInit(self):
         '''Initialize the dictionary of the buttons'''
         self.buttons = {
             'l' : self.crBt("Load", self.loadFromFile),
@@ -117,7 +120,7 @@ class App:
             command = command
         )
 
-    def _ButtonPlace(self):
+    def __ButtonPlace(self):
         '''Place all the buttons'''
         j = self.scrset['pside']
         h = self.scrset['buttonY']
@@ -140,7 +143,7 @@ class App:
             except KeyError as e:
                 msgbox.showerror(self.__name, f"KeyError raised: {e}, maybe you wrote an invalid button id in settings.json")
             except Exception as e:
-                msgbox.showerror(self.__name, f"Unknown Exception raised when placing the buttons: {e}")
+                msgbox.showerror(self.__name, f"A(n) {e.__class__.__name__} raised when placing the buttons: {e}")
 
     def initFromInput(self):
         '''Get the source file fron the source box'''
@@ -205,7 +208,7 @@ class App:
             msgbox.showerror(self.__name, "Input and/or output file missing!")
             return -1
         except Exception as e:
-            msgbox.showerror(self.__name, f"unknown Exception raised: {e}")
+            msgbox.showerror(self.__name, f"A(n) {e.__class__.__name__} Exception raised: {e}")
             return -1
         self.fr.delete('1.0', END)
         f.close()
@@ -219,7 +222,7 @@ class App:
             msgbox.showerror(self.__name, "Index file missing!")
 
     def loadset(self, file):
-        '''Load the settings, MUST BE CALLED FIRST IN self.__init__'''
+        '''Load the settings, MUST BE CALLED FIRST IN __init__ FUNCTION'''
         try:
             with open(file) as f:
                 self.setting = json.load(f)
@@ -231,10 +234,10 @@ class App:
         except FileNotFoundError as e:
             msgbox.showerror(self.__name, "Settings.json Missing!")
         except Exception as e:
-            msgbox.showerror(self.__name, f"Unknown Exception raised when loading the settings: {e}")
+            msgbox.showerror(self.__name, f"A(n) {e.__class__.__name__} raised when loading the settings: {e}")
 
     def copy(self):
-        
+        '''Clear the result box and copy the text in the source box'''
         self.to.delete('1.0',END)
         self.to.insert(END, self.fr.get('1.0',END))
 
@@ -294,7 +297,7 @@ class App:
                 self.setting['o']['lan']
             ))
         except Exception as e:
-            msgbox.showerror(self.__name, f'Invalid Translation: {e}')
+            msgbox.showerror(self.__name, f'A(n) {e.__class__.__name__} raised when translating: {e}')
 
 if __name__ == '__main__':
     app = App('./settings.json')
