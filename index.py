@@ -10,7 +10,8 @@ class IndexItem:
             self.par.children.append(self)
             self.par.chcnt += 1
             self.id = self.par.chcnt
-        else: self.id = -1
+        else:
+            self.id = -1
         self.line = line
 
     def generate(self):
@@ -24,8 +25,9 @@ class IndexItem:
     def __repr__(self):
         return f"IndexItem({self.lv}, \"{self.title}\", {self.par}, {self.line})"
 
+
 class IndexList:
-    def __init__(self, passage, name = "Root"):
+    def __init__(self, passage, name="Root"):
         self.list = []
         prstList = []
         self.root = IndexItem(0, name, None, -1)
@@ -67,8 +69,9 @@ class IndexList:
         return self[i].generate()
 
     def save(self, file):
-        with open(file, "w", encoding = "utf-8") as f:
-            for i in self.list: f.write(f"{i.line} {i.lv} {i.title}\n")
+        with open(file, "w", encoding="utf-8") as f:
+            for i in self.list:
+                f.write(f"{i.line} {i.lv} {i.title}\n")
         f.close()
 
     @classmethod
@@ -76,11 +79,11 @@ class IndexList:
         inst = cls([])
         inst.list = []
         prstList = []
-        f = open(file,encoding = "utf-8")
+        f = open(file, encoding="utf-8")
         line = f.readline()
         while line != '':
-            a,b,s = line.split(' ',2)
-            a,b = int(a),int(b)
+            a, b, s = line.split(' ', 2)
+            a, b = int(a), int(b)
             s = s[:-1]
             if b == 0:
                 inst.root = IndexItem(0, s, None, a)
@@ -89,7 +92,8 @@ class IndexList:
                 line = f.readline()
                 continue
             else:
-                while b <= prstList[-1].lv: prstList.pop()
+                while b <= prstList[-1].lv:
+                    prstList.pop()
             newitem = IndexItem(b, s, prstList[-1], a)
             prstList.append(newitem)
             inst.list.append(newitem)
